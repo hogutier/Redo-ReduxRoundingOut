@@ -29,8 +29,12 @@ export const fetchRooms = () => {
   };
 }
 
+const initialState = { 
+  list:[], 
+  isFetching: false 
+};
 
-const roomsReducer = (state = { list:[], isFetching: false }, action) => {
+const roomsReducer = (state = initialState, action) => {
   switch (action.type) {
     case ROOMS_REQUEST: 
     return { isFetching: true }

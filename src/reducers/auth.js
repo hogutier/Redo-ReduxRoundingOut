@@ -30,8 +30,17 @@ export const login = () => {
   };
 }
 
+const initialState = { 
+  user: {
+    firstName: "",
+    lastName: "",
+    gender: "",
+    reservation: {}
+  }, 
+  isFetching: false
+};
 
-const authReducer = (state = { user: {}, isFetching: false }, action) => {
+const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case AUTH_REQUEST:
       return { isFetching: true }

@@ -34589,8 +34589,18 @@ var login = exports.login = function login() {
   }();
 };
 
+var initialState = {
+  user: {
+    firstName: "",
+    lastName: "",
+    gender: "",
+    reservation: {}
+  },
+  isFetching: false
+};
+
 var authReducer = function authReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { user: {}, isFetching: false };
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
   var action = arguments[1];
 
   switch (action.type) {
@@ -34730,8 +34740,13 @@ var fetchRooms = exports.fetchRooms = function fetchRooms() {
   }();
 };
 
+var initialState = {
+  list: [],
+  isFetching: false
+};
+
 var roomsReducer = function roomsReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { list: [], isFetching: false };
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
   var action = arguments[1];
 
   switch (action.type) {
