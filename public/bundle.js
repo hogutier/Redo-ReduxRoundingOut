@@ -34343,8 +34343,6 @@ var _auth = __webpack_require__(/*! ./reducers/auth */ "./src/reducers/auth.js")
 
 var _rooms = __webpack_require__(/*! ./reducers/rooms */ "./src/reducers/rooms.js");
 
-var _reducers = __webpack_require__(/*! ./reducers */ "./src/reducers/index.js");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -34471,31 +34469,21 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 
-var _redux = __webpack_require__(/*! redux */ "./node_modules/redux/es/index.js");
-
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/lib/index.js");
-
-var _reduxThunk = __webpack_require__(/*! redux-thunk */ "./node_modules/redux-thunk/lib/index.js");
-
-var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
 var _App = __webpack_require__(/*! ./App */ "./src/App.js");
 
 var _App2 = _interopRequireDefault(_App);
 
-var _reducers = __webpack_require__(/*! ./reducers */ "./src/reducers/index.js");
+var _store = __webpack_require__(/*! ./store */ "./src/store.js");
 
-var _reducers2 = _interopRequireDefault(_reducers);
+var _store2 = _interopRequireDefault(_store);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || _redux.compose;
-
-var store = (0, _redux.createStore)(_reducers2.default, composeEnhancers((0, _redux.applyMiddleware)(_reduxThunk2.default)));
-
 (0, _reactDom.render)(_react2.default.createElement(
   _reactRedux.Provider,
-  { store: store },
+  { store: _store2.default },
   _react2.default.createElement(_App2.default, null)
 ), document.getElementById('root'));
 
@@ -34617,41 +34605,6 @@ exports.default = authReducer;
 
 /***/ }),
 
-/***/ "./src/reducers/index.js":
-/*!*******************************!*\
-  !*** ./src/reducers/index.js ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _redux = __webpack_require__(/*! redux */ "./node_modules/redux/es/index.js");
-
-var _auth = __webpack_require__(/*! ./auth */ "./src/reducers/auth.js");
-
-var _auth2 = _interopRequireDefault(_auth);
-
-var _rooms = __webpack_require__(/*! ./rooms */ "./src/reducers/rooms.js");
-
-var _rooms2 = _interopRequireDefault(_rooms);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var reducer = (0, _redux.combineReducers)({
-  auth: _auth2.default,
-  rooms: _rooms2.default
-});
-
-exports.default = reducer;
-
-/***/ }),
-
 /***/ "./src/reducers/rooms.js":
 /*!*******************************!*\
   !*** ./src/reducers/rooms.js ***!
@@ -34760,6 +34713,49 @@ var roomsReducer = function roomsReducer() {
 };
 
 exports.default = roomsReducer;
+
+/***/ }),
+
+/***/ "./src/store.js":
+/*!**********************!*\
+  !*** ./src/store.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _redux = __webpack_require__(/*! redux */ "./node_modules/redux/es/index.js");
+
+var _reduxThunk = __webpack_require__(/*! redux-thunk */ "./node_modules/redux-thunk/lib/index.js");
+
+var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
+var _auth = __webpack_require__(/*! ./reducers/auth */ "./src/reducers/auth.js");
+
+var _auth2 = _interopRequireDefault(_auth);
+
+var _rooms = __webpack_require__(/*! ./reducers/rooms */ "./src/reducers/rooms.js");
+
+var _rooms2 = _interopRequireDefault(_rooms);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var reducer = (0, _redux.combineReducers)({
+  auth: _auth2.default,
+  rooms: _rooms2.default
+});
+
+var composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || _redux.compose;
+
+var store = (0, _redux.createStore)(reducer, composeEnhancers((0, _redux.applyMiddleware)(_reduxThunk2.default)));
+
+exports.default = store;
 
 /***/ }),
 

@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import SlideShow from './components/SlideShow';
 import { login } from './reducers/auth';
 import { fetchRooms } from './reducers/rooms';
-import { selectUserName, selectUserRoom } from './reducers';
 
 class App extends Component {
   componentDidMount() {
