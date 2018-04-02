@@ -1,9 +1,11 @@
 import axios from 'axios';
 
+// Constants
 export const AUTH_REQUEST = 'AUTH_REQUEST';
 export const AUTH_SUCCESS = 'AUTH_SUCCESS';
 export const AUTH_FAILURE = 'AUTH_FAILURE';
 
+// Action Creators
 const authenticating = () => ({
   type: AUTH_REQUEST,
 });
@@ -19,7 +21,6 @@ const authError = (error) => ({
   payload: error,
 });
 
-
 export const login = () => {
   return async (dispatch) => {
     dispatch(authenticating());
@@ -29,6 +30,8 @@ export const login = () => {
     } catch (error) { dispatch(authError(error)) }
   };
 }
+
+// Reducer
 
 const initialState = { 
   user: {
@@ -43,7 +46,7 @@ const initialState = {
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case AUTH_REQUEST:
-      return { isFetching: true }
+      return { ...state, isFetching: true }
     case AUTH_SUCCESS:
       return { user: action.payload, isFetching: false };
     default:

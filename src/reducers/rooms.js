@@ -37,7 +37,7 @@ const initialState = {
 const roomsReducer = (state = initialState, action) => {
   switch (action.type) {
     case ROOMS_REQUEST: 
-    return { isFetching: true }
+    return { ...state, isFetching: true }
     case ROOMS_SUCCESS:
       return { list: action.payload, isFetching: false }
     default:
