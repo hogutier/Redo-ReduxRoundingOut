@@ -34375,7 +34375,12 @@ var App = function (_Component) {
     value: function render() {
       var _props2 = this.props,
           userName = _props2.userName,
-          accomodation = _props2.accomodation;
+          isFetching = _props2.isFetching;
+
+      if (isFetching) {
+        return _react2.default.createElement('div', { className: 'loader' });
+      }
+      var accomodation = this.props.accomodation || "";
 
       return _react2.default.createElement(
         'div',
@@ -34398,7 +34403,21 @@ var App = function (_Component) {
           _react2.default.createElement(
             'h2',
             null,
-            'Accomodation'
+            'Accomodation:   '
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            _react2.default.createElement(
+              'em',
+              null,
+              accomodation.name
+            )
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            _react2.default.createElement('img', { src: accomodation.image, width: 300, alt: 'accomodation' })
           )
         ),
         _react2.default.createElement(_SlideShow2.default, null)
@@ -34413,13 +34432,14 @@ var mapStateToProps = function mapStateToProps(state) {
   var auth = state.auth,
       rooms = state.rooms;
 
-
   return {
-    userName: auth.user && auth.user.firstName
-    // accomodation: ??
+    userName: (0, _auth.selectUsername)(state),
+    isFetching: auth.isFetching,
+    accomodation: (0, _auth.reservedRoom)(state)
   };
 };
 
+//Shorter notation to pass properties with the same name (destructuring) You can pass an //object IF key names exported correspond to the same names imported
 var mapDispatchToProps = { login: _auth.login, fetchRooms: _rooms.fetchRooms };
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(App);
@@ -34502,7 +34522,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.login = exports.AUTH_FAILURE = exports.AUTH_SUCCESS = exports.AUTH_REQUEST = undefined;
+exports.login = exports.reservedRoom = exports.selectUsername = exports.AUTH_FAILURE = exports.AUTH_SUCCESS = exports.AUTH_REQUEST = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 
@@ -34512,10 +34534,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+// Constants
 var AUTH_REQUEST = exports.AUTH_REQUEST = 'AUTH_REQUEST';
 var AUTH_SUCCESS = exports.AUTH_SUCCESS = 'AUTH_SUCCESS';
 var AUTH_FAILURE = exports.AUTH_FAILURE = 'AUTH_FAILURE';
 
+// Action Creators
 var authenticating = function authenticating() {
   return {
     type: AUTH_REQUEST
@@ -34537,10 +34561,34 @@ var authError = function authError(error) {
   };
 };
 
+//Username SELECTOR
+var selectUsername = exports.selectUsername = function selectUsername(_ref) {
+  var auth = _ref.auth;
+
+  var title = void 0;
+  if (auth.user.gender === 'Male') {
+    title = "Mr.";
+  } else {
+    title = "Ms.";
+  }
+  return title + ' ' + auth.user.firstName + ' ' + auth.user.lastName;
+};
+
+var reservedRoom = exports.reservedRoom = function reservedRoom(_ref2) {
+  var auth = _ref2.auth,
+      rooms = _ref2.rooms;
+
+  var roomType = auth.user.reservation.roomType;
+  var selectedRoom = rooms.list.filter(function (room) {
+    return room.id === roomType;
+  });
+  return selectedRoom[0];
+};
+
 var login = exports.login = function login() {
   return function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(dispatch) {
-      var _ref2, data;
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(dispatch) {
+      var _ref4, data;
 
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -34552,8 +34600,8 @@ var login = exports.login = function login() {
               return _axios2.default.get("/auth");
 
             case 4:
-              _ref2 = _context.sent;
-              data = _ref2.data;
+              _ref4 = _context.sent;
+              data = _ref4.data;
 
               dispatch(authenticate(data));
               _context.next = 12;
@@ -34572,10 +34620,12 @@ var login = exports.login = function login() {
     }));
 
     return function (_x) {
-      return _ref.apply(this, arguments);
+      return _ref3.apply(this, arguments);
     };
   }();
 };
+
+// Reducer
 
 var initialState = {
   user: {
@@ -34593,7 +34643,7 @@ var authReducer = function authReducer() {
 
   switch (action.type) {
     case AUTH_REQUEST:
-      return { isFetching: true };
+      return _extends({}, state, { isFetching: true });
     case AUTH_SUCCESS:
       return { user: action.payload, isFetching: false };
     default:
@@ -34619,6 +34669,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.fetchRooms = exports.ROOMS_FAILURE = exports.ROOMS_SUCCESS = exports.ROOMS_REQUEST = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 
@@ -34704,7 +34756,7 @@ var roomsReducer = function roomsReducer() {
 
   switch (action.type) {
     case ROOMS_REQUEST:
-      return { isFetching: true };
+      return _extends({}, state, { isFetching: true });
     case ROOMS_SUCCESS:
       return { list: action.payload, isFetching: false };
     default:

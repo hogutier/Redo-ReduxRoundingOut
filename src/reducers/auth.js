@@ -21,6 +21,24 @@ const authError = (error) => ({
   payload: error,
 });
 
+//Username SELECTOR
+export const selectUsername = ({auth}) => {
+  let title
+  if (auth.user.gender === 'Male'){
+    title = "Mr."
+  } else {
+    title = "Ms."
+  }
+  return `${title} ${auth.user.firstName} ${auth.user.lastName}`
+}
+
+export const reservedRoom = ({auth, rooms}) => {
+  const roomType = auth.user.reservation.roomType
+  const selectedRoom = rooms.list.filter(room => room.id === roomType )
+  return selectedRoom[0]
+}
+
+
 export const login = () => {
   return async (dispatch) => {
     dispatch(authenticating());
@@ -33,13 +51,13 @@ export const login = () => {
 
 // Reducer
 
-const initialState = { 
+const initialState = {
   user: {
     firstName: "",
     lastName: "",
     gender: "",
     reservation: {}
-  }, 
+  },
   isFetching: false
 };
 
